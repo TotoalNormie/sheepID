@@ -5,7 +5,8 @@ interface Props {
     children: number;
 }
 
-const SheepRow = ({ children }: Props) => {
+const SheepRow = ({ children}: Props) => {
+    
     return (
         <li>
             {children}
