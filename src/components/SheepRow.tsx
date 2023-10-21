@@ -1,19 +1,65 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useRef, useState, ChangeEvent, KeyboardEvent } from 'react';
+
 interface Props {
     children: number;
 }
 
 const SheepRow = ({ children }: Props) => {
+    const li = useRef<HTMLLIElement>(null);
+    const [showInput, setShowInput] = useState<boolean>(false);
+    const [number, setNumber] = useState<number | string>(children);
+    function deleteRow() {
+        if (!li.current) {
+            console.error('li element doesnt exist');
+            return;
+        }
+        li.current.remove();
+    }
+
+    function toggleInput() {
+        if (number === '') return;
+        setShowInput(!showInput);
+    }
+
+    function handleInput(e: ChangeEvent<HTMLInputElement>) {
+        console.log(e);
+        const value: string = e.target.value;
+        if (value.length > 4) return;
+        if (value.length === 0) {
+            setNumber('');
+            return;
+        }
+        const numValue: number = parseInt(value);
+        console.log()
+        if (isNaN(numValue)) return;
+        setNumber(numValue);
+    }
+
+    function handleKeyPress(e: KeyboardEvent<HTMLInputElement>) {
+        if(e.code === 'Enter') toggleInput();
+    }
 
     return (
-        <li>
-            {children}
-            <button>
+        <li ref={li}>
+            {
+                showInput ?
+                    <input
+                        type='number'
+                        name='id'
+                        value={number}
+                        onChange={handleInput}
+                        onKeyDown={handleKeyPress}
+                    />
+                    :
+                    <span>{number}</span>
+            }
+            <button onClick={toggleInput}>
                 <FontAwesomeIcon icon={faPen} />
             </button>
-            <button>
+            <button onClick={deleteRow}>
                 <FontAwesomeIcon icon={faTrash} />
             </button>
         </li>
