@@ -5,8 +5,8 @@ interface Props {
     children: number;
 }
 
-const SheepRow = ({ children}: Props) => {
-    
+const SheepRow = ({ children }: Props) => {
+
     return (
         <li>
             {children}
@@ -14,7 +14,7 @@ const SheepRow = ({ children}: Props) => {
                 <FontAwesomeIcon icon={faPen} />
             </button>
             <button>
-            <FontAwesomeIcon icon={faTrash} />
+                <FontAwesomeIcon icon={faTrash} />
             </button>
         </li>
     );
