@@ -1,11 +1,14 @@
 import SheepRow from './components/SheepRow.tsx';
 import { useState, useRef, FormEvent} from 'react';
+import quickstart from './vision.ts';
 
 function App() {
   const [sheep, setSheep] = useState([1232, 5122, 241, 5342, 1242, 1234]);
   const sheepList = sheep.map((num: number, index: number) => { return <SheepRow key={index}>{num}</SheepRow> });
 
   const input = useRef<HTMLInputElement>(null);
+
+  quickstart();
 
   const handleForm = (e: FormEvent ) => {
     e.preventDefault();
