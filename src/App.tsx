@@ -1,5 +1,8 @@
 import SheepRow from './components/SheepRow.tsx';
 import { useState, useRef, FormEvent} from 'react';
+import searchImage from './vision.ts';
+
+
 
 function App() {
   const [sheep, setSheep] = useState([1232, 5122, 241, 5342, 1242, 1234]);
@@ -16,6 +19,26 @@ function App() {
     setSheep([...sheep, newSheepNum]);
   } 
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!e.target.files || e.target.files.length === 0) {
+      console.error('No file selected.');
+      return;
+    }
+  
+    const file = e.target.files[0];
+    console.log(file);
+    const reader = new FileReader();
+  
+    reader.onload = function (event: ProgressEvent) {
+      const base64Image = event.target.result.split(',')[1];
+      const textInImage = searchImage(base64Image);
+      console.log(textInImage);
+    };
+  
+    reader.readAsDataURL(file);
+  }
+
+
   return (
     <>
       <header></header>
@@ -24,8 +47,9 @@ function App() {
         <ol>
           {sheepList}
         </ol>
+        <input type="file" accept="image/*" onChange={handleImageChange}/>
         <form onSubmit={handleForm}>
-        <input type="number" name="" id="" ref={input}/>
+        <input type="number" ref={input}/>
         <button>Add sheep</button>
         </form>
       </main>
@@ -34,4 +58,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
