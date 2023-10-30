@@ -36,6 +36,7 @@ const SheepRow = ({ children }: Props) => {
 
     function handleInput(e: ChangeEvent<HTMLInputElement>) {
         console.log(e);
+        e.preventDefault();
         const value: string = e.target.value;
         if (value.length > 4) return;
         if (value.length === 0) {
@@ -54,24 +55,27 @@ const SheepRow = ({ children }: Props) => {
 
     return (
         <li ref={li}>
+            <form>
+
             {showInput ? (
                 <input
-                    type='number'
-                    name='id'
-                    value={number}
-                    onChange={handleInput}
-                    onKeyDown={handleKeyPress}
-                    onBlur={toggleInput}
+                type='number'
+                name='id'
+                value={number}
+                onChange={handleInput}
+                onKeyDown={handleKeyPress}
+                onBlur={toggleInput}
                 />
-            ) : (
-                <span>{number}</span>
-            )}
+                ) : (
+                    <span>{number}</span>
+                    )}
             <button onClick={toggleInput}>
                 <FontAwesomeIcon icon={faPen} />
             </button>
             <button onClick={deleteRow}>
                 <FontAwesomeIcon icon={faTrash} />
             </button>
+            </form>
         </li>
     );
 };
