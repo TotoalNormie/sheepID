@@ -4,9 +4,9 @@ import searchImage from "./vision.ts";
 
 
 function App() {
-    const [sheep, setSheep] = useState([]);
+    const [sheep, setSheep] = useState<number[]>([]);
     const sheepList = sheep.map((num: number, index: number) => {
-        return <SheepRow key={index}>{num}</SheepRow>;
+        return <SheepRow onIDchange={} key={index} index={index}>{num}</SheepRow>;
     });
     const input = useRef<HTMLInputElement>(null);
     

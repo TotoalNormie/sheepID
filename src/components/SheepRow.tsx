@@ -5,6 +5,8 @@ import { useRef, useState, ChangeEvent, KeyboardEvent } from "react";
 
 interface Props {
     children: number;
+    index: number;
+    onIDchange: (value: string, id: number) => void;
 }
 
 function idToString(id: number): string {
@@ -16,7 +18,7 @@ function idToString(id: number): string {
     return str;
 }
 
-const SheepRow = ({ children }: Props) => {
+const SheepRow = ({ children, index, onIDchange }: Props) => {
     const li = useRef<HTMLLIElement>(null);
     const [showInput, setShowInput] = useState<boolean>(false);
     const [number, setNumber] = useState<string>(idToString(children));
@@ -47,6 +49,7 @@ const SheepRow = ({ children }: Props) => {
         console.log();
         if (isNaN(numValue)) return;
         setNumber(numValue.toString());
+        onIDchange(number, index);
     }
 
     function handleKeyPress(e: KeyboardEvent<HTMLInputElement>) {
