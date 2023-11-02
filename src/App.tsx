@@ -3,12 +3,19 @@ import { useState, useRef, FormEvent } from "react";
 import searchImage from "./vision.ts";
 
 
+
+
 function App() {
     const [sheep, setSheep] = useState<number[]>([]);
     const sheepList = sheep.map((num: number, index: number) => {
-        return <SheepRow onIDchange={} key={index} index={index}>{num}</SheepRow>;
+        return <SheepRow onIDchange={handlechildChange} key={index} index={index}>{num}</SheepRow>;
     });
     const input = useRef<HTMLInputElement>(null);
+    const [childVal, setChildVal] = useState<string[]>([]);
+
+    function handlechildChange((value: string, id: number)) {
+
+    }
     
     const handleForm = (e: FormEvent) => {
         e.preventDefault();
