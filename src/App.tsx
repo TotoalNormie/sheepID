@@ -4,7 +4,7 @@ import searchImage from "./vision.ts";
 
 
 function App() {
-    const [sheep, setSheep] = useState([]);
+    const [sheep, setSheep] = useState([1423, 12, 532, 533, 6734]);
     const sheepList = sheep.map((num: number, index: number) => {
         return <SheepRow key={index}>{num}</SheepRow>;
     });
