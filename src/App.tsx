@@ -1,21 +1,22 @@
 import SheepRow from "./components/SheepRow.tsx";
-import { useState, useRef, FormEvent } from "react";
+import { useState, useRef, FormEvent, useEffect } from "react";
 import searchImage from "./vision.ts";
-
-
+import { idToString } from '../global/Functions';
 
 
 function App() {
 
-    const [sheep, setSheep] = useState<number[]>([1423, 12, 532, 533, 6734]);
+    const [sheep, setSheep] = useState<string[]>(['1423', '12', '532', '533', '6734']);
+    useEffect(() => {
+      console.log(sheep);
+    }, [sheep, setSheep]);
+    
     const sheepList = sheep.map((num: number, index: number) => {
         return <SheepRow onIDchange={handlechildChange} key={index} index={index}>{num}</SheepRow>;
     });
     const input = useRef<HTMLInputElement>(null);
-    const [childVal, setChildVal] = useState<string[]>([]);
-
-    function handlechildChange((value: string, id: number)) {
-
+    function handlechildChange(value: string, id: number) {
+        
     }
     
     const handleForm = (e: FormEvent) => {

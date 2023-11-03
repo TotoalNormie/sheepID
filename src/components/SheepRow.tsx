@@ -3,19 +3,12 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRef, useState, ChangeEvent, KeyboardEvent } from "react";
 
+import { idToString } from '../global/Functions';
+ 
 interface Props {
     children: number;
     index: number;
     onIDchange: (value: string, id: number) => void;
-}
-
-function idToString(id: number): string {
-    let str: string = id.toString();
-    if (str.length > 4) str = str.slice(0, 4);
-    while (str.length < 4) {
-        str = "0" + str;
-    }
-    return str;
 }
 
 const SheepRow = ({ children, index, onIDchange }: Props) => {
@@ -58,8 +51,6 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 
     return (
         <li ref={li}>
-            <form>
-
             {showInput ? (
                 <input
                 type='number'
@@ -78,7 +69,6 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
             <button onClick={deleteRow}>
                 <FontAwesomeIcon icon={faTrash} />
             </button>
-            </form>
         </li>
     );
 };
