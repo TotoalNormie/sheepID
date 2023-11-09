@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState, ChangeEvent, KeyboardEvent } from "react";
+import { useEffect, useRef, useState, ChangeEvent, KeyboardEvent } from "react";
 
-import { idToString } from '../global/Functions';
- 
+import { idToString } from "../global/Functions";
+
 interface Props {
-    children: number;
+    children: string;
     index: number;
     onIDchange: (value: string, id: number) => void;
 }
@@ -14,7 +14,9 @@ interface Props {
 const SheepRow = ({ children, index, onIDchange }: Props) => {
     const li = useRef<HTMLLIElement>(null);
     const [showInput, setShowInput] = useState<boolean>(false);
-    const [number, setNumber] = useState<string>(idToString(children));
+    const [number, setNumber] = useState<string>(children);
+
+
     function deleteRow() {
         if (!li.current) {
             console.error("li element doesnt exist");
@@ -25,8 +27,9 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 
     function toggleInput() {
         if (number === "") return;
-        setNumber(idToString(parseInt(number)));
+        setNumber(number);
         setShowInput(!showInput);
+        onIDchange(number, index);
     }
 
     function handleInput(e: ChangeEvent<HTMLInputElement>) {
@@ -42,7 +45,6 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
         console.log();
         if (isNaN(numValue)) return;
         setNumber(numValue.toString());
-        onIDchange(number, index);
     }
 
     function handleKeyPress(e: KeyboardEvent<HTMLInputElement>) {
@@ -53,16 +55,16 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
         <li ref={li}>
             {showInput ? (
                 <input
-                type='number'
-                name='id'
-                value={number}
-                onChange={handleInput}
-                onKeyDown={handleKeyPress}
-                onBlur={toggleInput}
+                    type='number'
+                    name='id'
+                    value={number}
+                    onChange={handleInput}
+                    onKeyDown={handleKeyPress}
+                    onBlur={toggleInput}
                 />
-                ) : (
-                    <span>{number}</span>
-                    )}
+            ) : (
+                <span>{number}</span>
+            )}
             <button onClick={toggleInput}>
                 <FontAwesomeIcon icon={faPen} />
             </button>

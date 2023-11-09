@@ -1,46 +1,38 @@
-import SheepRow from "./components/SheepRow.tsx";
-import { useState, useRef, FormEvent, useEffect } from "react";
+import { useState, useRef, FormEvent, useEffect, ChangeEvent } from "react";
 import searchImage from "./vision.ts";
-import { idToString } from '../global/Functions';
-
+import SheepTable from "./components/SheepTable.tsx";
+import { idToString, idToStringArray } from "./global/Functions";
 
 function App() {
+    const [input, setInput] = useState<string>("");
 
-    const [sheep, setSheep] = useState<string[]>(['1423', '12', '532', '533', '6734']);
-    useEffect(() => {
-      console.log(sheep);
-    }, [sheep, setSheep]);
-    
-    const sheepList = sheep.map((num: number, index: number) => {
-        return <SheepRow onIDchange={handlechildChange} key={index} index={index}>{num}</SheepRow>;
-    });
-    const input = useRef<HTMLInputElement>(null);
-    function handlechildChange(value: string, id: number) {
-        
-    }
-    
+    const [sheep, setSheep] = useState<string[]>(idToStringArray([
+        "1423",
+        "12",
+        "532",
+        "533",
+        "6734",
+    ]));
     const handleForm = (e: FormEvent) => {
         e.preventDefault();
+        console.log(input);
         if (!input) return;
-        console.log(input, input.current?.value);
-        const sheepValue: string = input.current?.value
-        ? input.current?.value
-        : "";
-        if (sheepValue?.length > 4) return;
-        const newSheepNum = Number(sheepValue);
-        setSheep([...sheep, newSheepNum]);
+        const sheepValue: string = input ? input : "";
+        setSheep(idToStringArray([...sheep, sheepValue]));
+        setInput('');
     };
-    
+
     async function handleVisionText(array: object[]) {
         console.log(array);
-        let newArray: number[]= [];
-        for(let i = 1; i < array.length; i++) {
-            const num = parseInt(array[i].description.replace(/[^0-9]/g, ''));
+        let newArray: number[] = [];
+        for (let i = 1; i < array.length; i++) {
+            const num = parseInt(array[i].description.replace(/[^0-9]/g, ""));
             // console.log(num);
-            if(isNaN(num) || num <= 0) continue;
+            if (isNaN(num) || num <= 0) continue;
             newArray.push(num);
         }
-        setSheep([...sheep, ...newArray]);
+        setSheep(idToStringArray([...sheep, ...newArray]));
+        
     }
     async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length === 0) {
@@ -62,20 +54,34 @@ function App() {
 
         reader.readAsDataURL(file);
     }
+    function handleInput(e: ChangeEvent<HTMLInputElement>) {
+        const value: string = e.target.value;
+        if (value.length > 4) return;
+        if (value.length === 0) {
+            return;
+        }
+        setInput(value);
+    }
+
+    function handlechildChange(updatedData: string[]) {
+        setSheep(updatedData);
+    }
+    
+
 
     return (
         <>
             <header></header>
             <main>
                 <h1>Sheep ID</h1>
-                <ol>{sheepList}</ol>
+                <SheepTable data={sheep} onDataChange={handlechildChange} />
                 <input
                     type='file'
                     accept='image/*'
                     onChange={handleImageChange}
                 />
                 <form onSubmit={handleForm}>
-                    <input type='number' ref={input} />
+                    <input type='number' value={input} onInput={handleInput} />
                     <button>Add sheep</button>
                 </form>
             </main>
