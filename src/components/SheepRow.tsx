@@ -3,8 +3,6 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState, ChangeEvent, KeyboardEvent } from "react";
 
-import { idToString } from "../global/Functions";
-
 interface Props {
     children: string;
     index: number;
@@ -14,9 +12,9 @@ interface Props {
 const SheepRow = ({ children, index, onIDchange }: Props) => {
     const li = useRef<HTMLLIElement>(null);
     const [showInput, setShowInput] = useState<boolean>(false);
-    const [number, setNumber] = useState<string>(children);
+    const [number, setNumber] = useState(children);
 
-
+    console.log(number);
     function deleteRow() {
         if (!li.current) {
             console.error("li element doesnt exist");

@@ -1,25 +1,45 @@
 import { useState, useRef, FormEvent, useEffect, ChangeEvent } from "react";
 import searchImage from "./vision.ts";
-import SheepTable from "./components/SheepTable.tsx";
+import SheepRow from "./components/SheepRow";
 import { idToString, idToStringArray } from "./global/Functions";
 
 function App() {
     const [input, setInput] = useState<string>("");
 
-    const [sheep, setSheep] = useState<string[]>(idToStringArray([
-        "1423",
-        "12",
-        "532",
-        "533",
-        "6734",
-    ]));
+    const [sheep, setSheep] = useState<string[]>(
+        idToStringArray(["1423", "12", "532", "533", "6734"])
+    );
+
+    useEffect(() => {
+        const sheepFormated = idToStringArray(sheep);
+        if (JSON.stringify(sheep) !== JSON.stringify(sheepFormated)) {
+            setSheep(sheepFormated);
+            console.log("sheep: ", sheepFormated);
+        }
+    }, [sheep]);
+
+    function handlechildChange(value: string, id: number) {
+        console.log("handle");
+        const sheepClone: string[] = [...sheep];
+        sheepClone[id] = value;
+
+        setSheep(sheepClone);
+    }
+
+    const sheepList = sheep.map((num: string, index: number) => {
+        return (
+            <SheepRow onIDchange={handlechildChange} key={index} index={index}>
+                {num}
+            </SheepRow>
+        );
+    });
     const handleForm = (e: FormEvent) => {
         e.preventDefault();
         console.log(input);
         if (!input) return;
         const sheepValue: string = input ? input : "";
-        setSheep(idToStringArray([...sheep, sheepValue]));
-        setInput('');
+        setSheep([...sheep, sheepValue]);
+        setInput("");
     };
 
     async function handleVisionText(array: object[]) {
@@ -32,7 +52,6 @@ function App() {
             newArray.push(num);
         }
         setSheep(idToStringArray([...sheep, ...newArray]));
-        
     }
     async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
         if (!e.target.files || e.target.files.length === 0) {
@@ -63,18 +82,12 @@ function App() {
         setInput(value);
     }
 
-    function handlechildChange(updatedData: string[]) {
-        setSheep(updatedData);
-    }
-    
-
-
     return (
         <>
             <header></header>
             <main>
                 <h1>Sheep ID</h1>
-                <SheepTable data={sheep} onDataChange={handlechildChange} />
+                <ol>{sheepList}</ol>
                 <input
                     type='file'
                     accept='image/*'
