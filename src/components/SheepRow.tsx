@@ -14,7 +14,11 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
     const [showInput, setShowInput] = useState<boolean>(false);
     const [number, setNumber] = useState(children);
 
-    console.log(number);
+    useEffect(() =>{
+        setNumber(children);
+    }, [children])
+
+    // console.log(children);
     function deleteRow() {
         if (!li.current) {
             console.error("li element doesnt exist");
@@ -25,13 +29,13 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 
     function toggleInput() {
         if (number === "") return;
-        setNumber(number);
+
         setShowInput(!showInput);
         onIDchange(number, index);
     }
 
     function handleInput(e: ChangeEvent<HTMLInputElement>) {
-        console.log(e);
+        // console.log(e);
         e.preventDefault();
         const value: string = e.target.value;
         if (value.length > 4) return;
@@ -40,7 +44,6 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
             return;
         }
         const numValue: number = parseInt(value);
-        console.log();
         if (isNaN(numValue)) return;
         setNumber(numValue.toString());
     }
