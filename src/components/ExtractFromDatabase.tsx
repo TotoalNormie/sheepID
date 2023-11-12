@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 interface Props {
 	handleDataChange: (data: string[]) => void;
@@ -45,6 +45,10 @@ const ExtractFromDatabase = ({ handleDataChange }: Props) => {
 		// Read the file as text
 
 		console.log(e.target);
+    if(e.target.files === null) {
+      setError('File not found');
+      return;
+    }
 		reader.readAsText(e.target.files[0]);
 	};
 

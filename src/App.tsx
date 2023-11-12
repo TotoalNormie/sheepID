@@ -6,10 +6,6 @@ import CompareSheep from './components/CompareSheep';
 function App() {
 	const [sheep, setSheep] = useState<string[]>([]);
 	const [database, setDatabase] = useState<string[]>([]);
-	// useEffect(() => {
-	// 	console.log(sheep);
-	// 	// setSheep;
-	// }, [sheep]);
 
 	function handleChange(data: string[]) {
 		console.log(data);

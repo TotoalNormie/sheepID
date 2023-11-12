@@ -37,7 +37,7 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp }: Props) => {
 		let rndSheep: string[] = [];
 		let dnrSheep = [...databaseSheep];
 
-		realSheep.forEach((realID: string, index: number) => {
+		realSheep.forEach((realID: string) => {
             // console.log(realID);
 			const dbID = databaseSheep.indexOf(realID);
             // console.log(index, realID, dbID);
