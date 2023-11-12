@@ -1,25 +1,30 @@
-import { useState, useRef, FormEvent, useEffect, ChangeEvent } from 'react';
+import { useState, FormEvent, useEffect, ChangeEvent } from 'react';
 import searchImage from '../vision.ts';
 import SheepRow from './SheepRow';
 import { idToStringArray } from '../global/Functions';
 
 interface Props {
-	data: string[];
 	onDataChange: (data: string[]) => void;
 }
 
-const AddSheep = ({ data, onDataChange }: Props) => {
+interface APIresponse {
+	description: string;
+}
+
+const AddSheep = ({ onDataChange }: Props) => {
 	const [input, setInput] = useState<string>('');
 
-	const [sheep, setSheep] = useState<string[]>(data);
+	const [sheep, setSheep] = useState<string[]>(['1423', '12', '532', '533', '6734']);
 
 	useEffect(() => {
 		const sheepFormated = idToStringArray(sheep);
 		console.log('sheepFormated', JSON.stringify(sheepFormated));
+		console.log('sheep', JSON.stringify(sheep));
 		if (JSON.stringify(sheep) !== JSON.stringify(sheepFormated)) {
+			console.log('sheep is diherent')
 			setSheep(sheepFormated);
-			onDataChange(sheepFormated);
 		}
+		onDataChange(sheepFormated);
 	}, [sheep]);
 
 	function handlechildChange(value: string, id: number) {
@@ -45,11 +50,14 @@ const AddSheep = ({ data, onDataChange }: Props) => {
 		setInput('');
 	};
 
-	async function handleVisionText(array: object[]) {
+	async function handleVisionText(array: APIresponse[]) {
 		// console.log(array);
 		let newArray: string[] = [];
 		for (let i = 1; i < array.length; i++) {
-			const num = parseInt(array[i].description.replace(/[^0-9]/g, ''));
+			if(!Array.isArray(array[i])) continue;
+			const row = array[i];
+			if(!row.description) continue;
+			const num = parseInt(row.description.replace(/[^0-9]/g, ''));
 			// console.log(num);
 			if (isNaN(num) || num <= 0) continue;
 			const string = num.toString();
@@ -71,7 +79,7 @@ const AddSheep = ({ data, onDataChange }: Props) => {
 			// console.log(e);
 			const base64Image = (e.target as any).result.split(',')[1];
 			const textInImage = await searchImage(base64Image);
-			console.log(textInImage);
+			// console.log(textInImage);
 			handleVisionText(textInImage.responses[0].textAnnotations);
 		};
 
@@ -80,9 +88,8 @@ const AddSheep = ({ data, onDataChange }: Props) => {
 	function handleInput(e: ChangeEvent<HTMLInputElement>) {
 		const value: string = e.target.value;
 		if (value.length > 4) return;
-		if (value.length === 0) {
-			return;
-		}
+		const numValue: number = parseInt(value);
+        if (isNaN(numValue) && value) return;
 		setInput(value);
 	}
 
