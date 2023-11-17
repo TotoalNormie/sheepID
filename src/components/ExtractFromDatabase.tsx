@@ -2,17 +2,22 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 interface Props {
 	handleDataChange: (data: string[]) => void;
+	seen: boolean;
 }
 
-const ExtractFromDatabase = ({ handleDataChange }: Props) => {
+const ExtractFromDatabase = ({ handleDataChange, seen }: Props) => {
 	const [data, setData] = useState<string[]>([]);
 	const [error, setError] = useState('');
+	const [hidden, setHidden] = useState(false);
 
 	useEffect(() => {
 		console.log('%c Extracting data changed', 'background: #222; color: #bada55');
 		handleDataChange(data);
 	}, [data]);
 
+	useEffect(() => {
+		setHidden(seen);
+	}, [seen])
 	const dataOutput = data.map((id: string, index: number) => <li key={index}>{id}</li>);
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +85,7 @@ const ExtractFromDatabase = ({ handleDataChange }: Props) => {
     setData(idArray);
   }
 	return (
-		<section>
+		<section className={hidden ? '' : 'hidden'}>
 			<input type='file' accept='.csv' onChange={handleFileChange} />
 			<span className='error'>{error}</span>
 			<ol>{dataOutput}</ol>

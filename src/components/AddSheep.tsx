@@ -5,16 +5,19 @@ import { idToStringArray } from '../global/Functions';
 
 interface Props {
 	onDataChange: (data: string[]) => void;
+	seen: boolean;
 }
 
 interface APIresponse {
 	description: string;
 }
 
-const AddSheep = ({ onDataChange }: Props) => {
+const AddSheep = ({ onDataChange, seen }: Props) => {
 	const [input, setInput] = useState<string>('');
 
 	const [sheep, setSheep] = useState<string[]>(['1423', '12', '532', '533', '6734']);
+
+	const [hidden, setHidden] = useState(false);
 
 	useEffect(() => {
 		const sheepFormated = idToStringArray(sheep);
@@ -26,6 +29,10 @@ const AddSheep = ({ onDataChange }: Props) => {
 		}
 		onDataChange(sheepFormated);
 	}, [sheep]);
+
+	useEffect(() => {
+		setHidden(seen);
+	}, [seen])
 
 	function handlechildChange(value: string, id: number) {
 		const sheepClone: string[] = [...sheep];
@@ -94,8 +101,8 @@ const AddSheep = ({ onDataChange }: Props) => {
 	}
 
 	return (
-		<section>
-			<h1>Sheep ID</h1>
+		<section className={hidden ? '' : 'hidden'}>
+			<h2>Введите сущестующтх овец</h2>
 			<form onSubmit={handleForm}>
 				<input type='number' value={input} onInput={handleInput} />
 				<button>Add sheep</button>

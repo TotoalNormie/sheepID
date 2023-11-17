@@ -1,16 +1,18 @@
 import { useEffect, useState } from 'react';
+import '../style/CompareSheep.css';
 
 interface Props {
 	realSheepProp: string[];
 	databaseSheepProp: string[];
+	seen: boolean;
 }
 
-const CompareSheep = ({ realSheepProp, databaseSheepProp }: Props) => {
+const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 	const [realSheep, setRealSheep] = useState<string[]>(realSheepProp);
 	const [databaseSheep, setDatabaseSheep] = useState<string[]>(databaseSheepProp);
+	const [hidden, setHidden] = useState(true);
 
 	useEffect(() => {
-		console.log(databaseSheepProp, realSheepProp);
 		if (JSON.stringify(realSheepProp) !== JSON.stringify(realSheep))
 			setRealSheep(realSheepProp);
 
@@ -18,44 +20,29 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp }: Props) => {
 			setDatabaseSheep(databaseSheepProp);
 	}, [realSheepProp, databaseSheepProp]);
 
-	// useEffect(() => {
-	// 	console.log('updates database');
-	// }, [databaseSheep]);
-	// useEffect(() => {
-	// 	console.log('updates real');
-	// 	console.log(realSheep);
-	// }, [realSheep]);
+	useEffect(() => {
+		setHidden(seen);
+	}, [seen]);
 
 	useEffect(handleSheep, [realSheep, databaseSheep]);
-
-	// databaseSheep.forEach((dbSheep: string, index: number) => {
-	//     if()
-	// });
 
 	function handleSheep() {
 		let radSheep: string[] = [];
 		let rndSheep: string[] = [];
-		let dnrSheep = [...databaseSheep];
+		let dnrSheep: string[] = [];
 
 		realSheep.forEach((realID: string) => {
-            // console.log(realID);
 			const dbID = databaseSheep.indexOf(realID);
-            // console.log(index, realID, dbID);
-			// console.log(dbID);
+
 			if (dbID !== -1) {
-                radSheep.push(realID);
-                // console.log('rad', radSheep);
-                dnrSheep.splice(dbID, 1);
-                // console.log('dnr', dnrSheep);
-			}else {
+				radSheep.push(realID);
+				databaseSheep.splice(dbID, 1);
+			} else {
 				rndSheep.push(realID);
-                // console.log('rnd', rndSheep);
-            }
+			}
 		});
 
-		// console.log('radSheep', radSheep);
-		// console.log('rndSheep', rndSheep);
-		// console.log('dnrSheep', dnrSheep);
+		dnrSheep = databaseSheep.slice();
 
 		setRealAndDatabaseSheep(radSheep);
 		setRealNotDatabaseSheep(rndSheep);
@@ -65,18 +52,72 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp }: Props) => {
 	const [realAndDatabaseSheep, setRealAndDatabaseSheep] = useState<string[]>([]);
 	const [realNotDatabaseSheep, setRealNotDatabaseSheep] = useState<string[]>([]);
 	const [databaseNotRealSheep, setDatabaseNotRealSheep] = useState<string[]>([]);
+	const [handledSheep, setHandledSheep] = useState<string[]>([]);
 
-	const outputRAD = realAndDatabaseSheep.map((id: string, index: number) => (
-		<li key={index}>{id}</li>
+	const toggleHandled = (itemId: string) => {
+		setHandledSheep(prevHandledSheep =>
+			prevHandledSheep.includes(itemId)
+				? prevHandledSheep.filter(id => id !== itemId)
+				: [...prevHandledSheep, itemId]
+		);
+	};
+
+	const outputRAD = realAndDatabaseSheep
+		.filter(id => !handledSheep.includes(id))
+		.map((id: string, index: number) => (
+			<li key={index} className='real-and-database'>
+				<input
+					type='checkbox'
+					checked={handledSheep.includes(id)}
+					onChange={() => toggleHandled(id)}
+				/>
+				{id}
+			</li>
+		));
+
+	const outputRND = realNotDatabaseSheep
+		.filter(id => !handledSheep.includes(id))
+		.map((id: string, index: number) => (
+			<li key={index} className='real-not-database'>
+				<input
+					type='checkbox'
+					checked={handledSheep.includes(id)}
+					onChange={() => toggleHandled(id)}
+				/>
+				{id}
+			</li>
+		));
+
+	const outputDNR = databaseNotRealSheep
+		.filter(id => !handledSheep.includes(id))
+		.map((id: string, index: number) => (
+			<li key={index} className='database-not-real'>
+				<input
+					type='checkbox'
+					checked={handledSheep.includes(id)}
+					onChange={() => toggleHandled(id)}
+				/>
+				{id}
+			</li>
+		));
+
+	const outputHandled = handledSheep.map((id: string, index: number) => (
+		<li
+			key={index}
+			className={
+				realNotDatabaseSheep.includes(id) ? 'real-not-database' : 'database-not-real'
+			}>
+			<input
+				type='checkbox'
+				checked={handledSheep.includes(id)}
+				onChange={() => toggleHandled(id)}
+			/>
+			{id}
+		</li>
 	));
-	const outputRND = realNotDatabaseSheep.map((id: string, index: number) => (
-		<li key={index}>{id}</li>
-	));
-	const outputDNR = databaseNotRealSheep.map((id: string, index: number) => (
-		<li key={index}>{id}</li>
-	));
+
 	return (
-		<section>
+		<section id='CompareSheep' className={hidden ? '' : 'hidden'}>
 			<div>
 				<h2>Real and in database</h2>
 				<ol>{outputRAD}</ol>
@@ -89,10 +130,9 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp }: Props) => {
 				<h2>In database, but not real</h2>
 				<ol>{outputDNR}</ol>
 			</div>
-
 			<div>
-				<h2>Handeled</h2>
-				<ol></ol>
+				<h2>Handled</h2>
+				<ol>{outputHandled}</ol>
 			</div>
 		</section>
 	);

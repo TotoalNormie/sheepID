@@ -1,0 +1,14 @@
+#CompareSheep li {
+    &.real-and-database {
+        background-color: rgb(152, 239, 152);
+    }
+    
+    &.real-not-database {
+        background-color: rgb(155, 196, 238);
+    }
+    
+    &.database-not-real {
+        background-color: rgb(236, 169, 150);
+    
+    }
+}
