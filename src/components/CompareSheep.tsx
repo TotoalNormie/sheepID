@@ -29,21 +29,23 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 	function handleSheep() {
 		let radSheep: string[] = [];
 		let rndSheep: string[] = [];
-		let dnrSheep: string[] = [];
+		let dnrSheep = [...databaseSheep];
 
 		realSheep.forEach((realID: string) => {
+            // console.log(realID);
 			const dbID = databaseSheep.indexOf(realID);
-
+            // console.log(index, realID, dbID);
+			// console.log(dbID);
 			if (dbID !== -1) {
-				radSheep.push(realID);
-				databaseSheep.splice(dbID, 1);
-			} else {
+                radSheep.push(realID);
+                // console.log('rad', radSheep);
+                dnrSheep.splice(dbID, 1);
+                // console.log('dnr', dnrSheep);
+			}else {
 				rndSheep.push(realID);
-			}
+                // console.log('rnd', rndSheep);
+            }
 		});
-
-		dnrSheep = databaseSheep.slice();
-
 		setRealAndDatabaseSheep(radSheep);
 		setRealNotDatabaseSheep(rndSheep);
 		setDatabaseNotRealSheep(dnrSheep);
@@ -79,12 +81,12 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 		.filter(id => !handledSheep.includes(id))
 		.map((id: string, index: number) => (
 			<li key={index} className='real-not-database'>
+				{id}
 				<input
 					type='checkbox'
 					checked={handledSheep.includes(id)}
 					onChange={() => toggleHandled(id)}
 				/>
-				{id}
 			</li>
 		));
 
@@ -92,12 +94,12 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 		.filter(id => !handledSheep.includes(id))
 		.map((id: string, index: number) => (
 			<li key={index} className='database-not-real'>
+				{id}
 				<input
 					type='checkbox'
 					checked={handledSheep.includes(id)}
 					onChange={() => toggleHandled(id)}
 				/>
-				{id}
 			</li>
 		));
 
@@ -107,31 +109,31 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 			className={
 				realNotDatabaseSheep.includes(id) ? 'real-not-database' : 'database-not-real'
 			}>
+			{id}
 			<input
 				type='checkbox'
 				checked={handledSheep.includes(id)}
 				onChange={() => toggleHandled(id)}
 			/>
-			{id}
 		</li>
 	));
 
 	return (
 		<section id='CompareSheep' className={hidden ? '' : 'hidden'}>
 			<div>
-				<h2>Real and in database</h2>
+				<h3>Существуют и в базе данных</h3>
 				<ol>{outputRAD}</ol>
 			</div>
 			<div>
-				<h2>Real, but not in database</h2>
+				<h3>Существуют, но нету в базе данных</h3>
 				<ol>{outputRND}</ol>
 			</div>
 			<div>
-				<h2>In database, but not real</h2>
+				<h3>Есть в базе данных, но не существуют</h3>
 				<ol>{outputDNR}</ol>
 			</div>
 			<div>
-				<h2>Handled</h2>
+				<h3>Обработанные</h3>
 				<ol>{outputHandled}</ol>
 			</div>
 		</section>

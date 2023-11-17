@@ -12,3 +12,15 @@
     
     }
 }
+
+main:has(#CompareSheep:not(.hidden)) {
+    display: block;
+}
+
+section:last-child {
+    padding: 2rem;
+    display: grid;
+    gap: 1rem;
+    align-items: baseline;
+    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+}

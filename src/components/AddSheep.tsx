@@ -1,7 +1,8 @@
 import { useState, FormEvent, useEffect, ChangeEvent } from 'react';
 import searchImage from '../vision.ts';
 import SheepRow from './SheepRow';
-import { idToStringArray } from '../global/Functions';
+import { idToStringArray, idToString } from '../global/Functions';
+import '../style/AddSheep.css';
 
 interface Props {
 	onDataChange: (data: string[]) => void;
@@ -14,17 +15,16 @@ interface APIresponse {
 
 const AddSheep = ({ onDataChange, seen }: Props) => {
 	const [input, setInput] = useState<string>('');
-
-	const [sheep, setSheep] = useState<string[]>(['1423', '12', '532', '533', '6734']);
-
+	const [sheep, setSheep] = useState<string[]>([]);
 	const [hidden, setHidden] = useState(false);
+	const [error, SetError] = useState('');
 
 	useEffect(() => {
 		const sheepFormated = idToStringArray(sheep);
-		console.log('sheepFormated', JSON.stringify(sheepFormated));
-		console.log('sheep', JSON.stringify(sheep));
+		// console.log('sheepFormated', JSON.stringify(sheepFormated));
+		// console.log('sheep', JSON.stringify(sheep));
 		if (JSON.stringify(sheep) !== JSON.stringify(sheepFormated)) {
-			console.log('sheep is diherent')
+			// console.log('sheep is diherent');
 			setSheep(sheepFormated);
 		}
 		onDataChange(sheepFormated);
@@ -32,7 +32,7 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 
 	useEffect(() => {
 		setHidden(seen);
-	}, [seen])
+	}, [seen]);
 
 	function handlechildChange(value: string, id: number) {
 		const sheepClone: string[] = [...sheep];
@@ -52,29 +52,19 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 		e.preventDefault();
 		// console.log(input);
 		if (!input) return;
+		if (sheep.includes(idToString(input))) {
+			SetError('Номер овцы уже есть в списке');
+			return;
+		}
 		const sheepValue: string = input ? input : '';
 		setSheep([...sheep, sheepValue]);
 		setInput('');
+		SetError('');
 	};
 
-	async function handleVisionText(array: APIresponse[]) {
-		// console.log(array);
-		let newArray: string[] = [];
-		for (let i = 1; i < array.length; i++) {
-			if(!Array.isArray(array[i])) continue;
-			const row = array[i];
-			if(!row.description) continue;
-			const num = parseInt(row.description.replace(/[^0-9]/g, ''));
-			// console.log(num);
-			if (isNaN(num) || num <= 0) continue;
-			const string = num.toString();
-			newArray.push(string);
-		}
-		setSheep([...sheep, ...newArray]);
-	}
 	async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
 		if (!e.target.files || e.target.files.length === 0) {
-			console.error('No file selected.');
+			console.error('Файл не выбран');
 			return;
 		}
 
@@ -87,30 +77,64 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 			const base64Image = (e.target as any).result.split(',')[1];
 			const textInImage = await searchImage(base64Image);
 			// console.log(textInImage);
+			// console.log(Object.keys(textInImage.responses[0]).length === 0);
+			if (Object.keys(textInImage.responses[0]).length === 0) {
+				SetError('В фотографии не найдены номера овец.');
+				return;
+			}
 			handleVisionText(textInImage.responses[0].textAnnotations);
 		};
 
 		reader.readAsDataURL(file);
 	}
+
+	async function handleVisionText(array: APIresponse[]) {
+		// console.log(array);
+		let newArray: string[] = [];
+		for (let i = 1; i < array.length; i++) {
+			// console.log(array[i]);
+			if (array[i] !== null && typeof array[i] !== 'object') continue;
+			const row = array[i];
+			// console.log(row);
+			if (!row.description) continue;
+			const num = parseInt(row.description.replace(/[^0-9]/g, ''));
+			// console.log(num);
+			if (isNaN(num) || num <= 0) continue;
+			const string = num.toString();
+			// console.log('got to the end');
+			newArray.push(string);
+		}
+		// console.log(newArray);
+		if (newArray.length === 0) {
+			SetError('В фотографии не найдены номера овец.');
+			return;
+		}
+		SetError('');
+		setSheep([...sheep, ...newArray]);
+	}
 	function handleInput(e: ChangeEvent<HTMLInputElement>) {
 		const value: string = e.target.value;
 		if (value.length > 4) return;
 		const numValue: number = parseInt(value);
-        if (isNaN(numValue) && value) return;
+		// console.log(numValue);
+		if (isNaN(numValue) && value) return;
 		setInput(value);
 	}
-
 	return (
-		<section className={hidden ? '' : 'hidden'}>
-			<h2>Введите сущестующтх овец</h2>
+		<section id='AddSheep' className={hidden ? '' : 'hidden'}>
+			<h3>Введите сущестующтх овец</h3>
 			<form onSubmit={handleForm}>
-				<input type='number' value={input} onInput={handleInput} />
-				<button>Add sheep</button>
+				<input type='text' value={input} onInput={handleInput} />
+				<button>Добавть номер</button>
 			</form>
-			<input type='file' accept='image/*' onChange={handleImageChange} />
+			<label className='custom-file-upload'>
+				<input type='file' accept='image/*' onChange={handleImageChange} />
+				Добавить номера с базы данных
+			</label>
+			<span className='error'>{error}</span>
 			<ol>{sheepList}</ol>
 		</section>
 	);
-}
+};
 
 export default AddSheep;

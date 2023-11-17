@@ -1,18 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import AddSheep from './components/AddSheep';
 import ExtractFromDatabase from './components/ExtractFromDatabase';
 import CompareSheep from './components/CompareSheep';
 import './style/App.css';
+import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import logo from './assets/logo.png';
 
 function App() {
 	const [sheep, setSheep] = useState<string[]>([]);
 	const [database, setDatabase] = useState<string[]>([]);
 	const [page, setPage] = useState<number>(1);
 	// const [pageIndex, setPageIndex] = useState(1);
-
-	useEffect(() => {
-		console.log(page);
-	}, [page]);
 
 	function handleChange(data: string[]) {
 		// console.log(data);
@@ -43,24 +42,28 @@ function App() {
 
 	return (
 		<>
-			<header></header>
+			<header>
+				<button onClick={handlePrev}>
+					<FontAwesomeIcon icon={faAngleLeft} />
+					Прошлый Шаг
+				</button>
+				<h1>
+					SheepID
+					<img src={logo} alt='' />
+				</h1>
+				<button onClick={handleNext}>
+					Следуйщий Шаг
+					<FontAwesomeIcon icon={faAngleRight} />
+				</button>
+			</header>
 			<main>
-				<div>
-					<button onClick={handlePrev}>Прошлый Шаг</button>
-					<button onClick={handleNext}>Следуйщий Шаг</button>
-				</div>
-				<div>
-					<AddSheep onDataChange={handleChange} seen={checkPage(1)} />
-					<ExtractFromDatabase
-						handleDataChange={handleDatabaseChange}
-						seen={checkPage(2)}
-					/>
-					<CompareSheep
-						realSheepProp={sheep}
-						databaseSheepProp={database}
-						seen={checkPage(3)}
-					/>
-				</div>
+				<AddSheep onDataChange={handleChange} seen={checkPage(1)} />
+				<ExtractFromDatabase handleDataChange={handleDatabaseChange} seen={checkPage(2)} />
+				<CompareSheep
+					realSheepProp={sheep}
+					databaseSheepProp={database}
+					seen={checkPage(3)}
+				/>
 			</main>
 			<footer></footer>
 		</>

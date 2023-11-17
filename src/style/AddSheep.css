@@ -1,0 +1,43 @@
+#AddSheep form {
+    background-color: var(--bg);
+    border-radius: 1rem;
+    width: fit-content;
+    border: 1px solid black;
+    & input {
+        width: calc(4ch + 1em);
+        background-color: var(--bg);
+        border: none;
+        border-radius: 1rem 0 0 1rem;
+        padding: .3em .5em;
+        border-right: 1px solid black
+    }
+}
+
+li input {
+    width: 4ch;
+    padding: 0;
+    background: none;
+    border: none;
+}
+
+.edit {
+    background-color: var(--bg2);
+}
+
+.editButton {
+    transition: color 0.5s ease;
+    &:hover {
+        color: rgb(74, 115, 74);
+    }
+}
+.deleteButton {
+    transition: color 0.5s ease;
+    &:hover {
+        color: rgb(136, 24, 24);
+    }
+}
+
+.editButton:hover {
+    color: rgb(74, 115, 74);
+    transition: color 0.5s ease;
+}
