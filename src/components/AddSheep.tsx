@@ -34,11 +34,26 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 		setHidden(seen);
 	}, [seen]);
 
-	function handlechildChange(value: string, id: number) {
+	function handlechildChange(value: string, id: number): boolean {
+		console.log(idToString(value), sheep.indexOf(idToString(value)), id);
+		
+		const sheepCheck: string[] = [...sheep];
+		console.log(sheepCheck);
+
+		sheepCheck.splice(id, 1);
+		console.log(sheepCheck);
+		if(sheepCheck.includes(idToString(value))) {
+			SetError('Номер овцы уже есть в списке');
+			return true;
+		}
+		console.log('still completes');
+		
 		const sheepClone: string[] = [...sheep];
 		sheepClone[id] = value;
 
+		SetError('');
 		setSheep(sheepClone);
+		return false;
 	}
 
 	const sheepList = sheep.map((num: string, index: number) => {
@@ -116,8 +131,9 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 		const value: string = e.target.value;
 		if (value.length > 4) return;
 		const numValue: number = parseInt(value);
-		// console.log(numValue);
+		console.log(numValue);
 		if (isNaN(numValue) && value) return;
+		if(numValue.toString() !== value && value) return;
 		setInput(value);
 	}
 	return (
@@ -125,13 +141,13 @@ const AddSheep = ({ onDataChange, seen }: Props) => {
 			<h3>Введите сущестующтх овец</h3>
 			<form onSubmit={handleForm}>
 				<input type='text' value={input} onInput={handleInput} />
-				<button>Добавть номер</button>
+				<button>Добавить номер</button>
 			</form>
 			<label className='custom-file-upload'>
 				<input type='file' accept='image/*' onChange={handleImageChange} />
 				Добавить номера с базы данных
 			</label>
-			<span className='error'>{error}</span>
+			<span className={error ? 'error' : ''}>{error}</span>
 			<ol>{sheepList}</ol>
 		</section>
 	);

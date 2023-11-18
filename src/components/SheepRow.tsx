@@ -6,13 +6,14 @@ import { useEffect, useRef, useState, ChangeEvent, KeyboardEvent } from 'react';
 interface Props {
 	children: string;
 	index: number;
-	onIDchange: (value: string, id: number) => void;
+	onIDchange: (value: string, id: number) => boolean;
 }
 
 const SheepRow = ({ children, index, onIDchange }: Props) => {
 	const li = useRef<HTMLLIElement>(null);
 	const [showInput, setShowInput] = useState<boolean>(false);
 	const [number, setNumber] = useState(children);
+	const [error, setError] = useState(false);
 
 	useEffect(() => {
 		setNumber(children);
@@ -29,9 +30,13 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 
 	function toggleInput() {
 		if (number === '') return;
-
+		if(showInput) {
+			const freshError = onIDchange(number, index);
+			setError(freshError);
+			if(freshError) return;
+			console.log('didnt return');
+		}	
 		setShowInput(!showInput);
-		onIDchange(number, index);
 	}
 
 	function handleInput(e: ChangeEvent<HTMLInputElement>) {
@@ -53,7 +58,7 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 	}
 
 	return (
-		<li ref={li} className={showInput ? 'edit' : ''}>
+		<li ref={li} className={(showInput ? 'edit' : '') +' '+ (error ? 'errorID' : '')}>
 			{showInput ? (
 				<input
 					name='id'
@@ -61,6 +66,7 @@ const SheepRow = ({ children, index, onIDchange }: Props) => {
 					onChange={handleInput}
 					onKeyDown={handleKeyPress}
 					onBlur={toggleInput}
+					autoFocus
 				/>
 			) : (
 				<span>{number}</span>
