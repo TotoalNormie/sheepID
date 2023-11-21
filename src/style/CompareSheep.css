@@ -1,26 +1,50 @@
-#CompareSheep li {
-    &.real-and-database {
-        background-color: rgb(152, 239, 152);
+#CompareSheep {
+    container: section / inline-size;
+
+	& li {
+		&.real-and-database {
+			background-color: rgb(152, 239, 152);
+		}
+
+		&.real-not-database {
+			background-color: rgb(155, 196, 238);
+		}
+
+		&.database-not-real {
+			background-color: rgb(236, 169, 150);
+		}
+	}
+	& > div:not(:first-child) {
+		border-right: 1px solid black;
+	}
+    & > div:first-child {
+		border-inline: 1px solid black;
+	}
+    & ol {
+        grid-template-columns: auto;
     }
-    
-    &.real-not-database {
-        background-color: rgb(155, 196, 238);
-    }
-    
-    &.database-not-real {
-        background-color: rgb(236, 169, 150);
-    
+    & h3 {
+        text-align: center;
     }
 }
 
 main:has(#CompareSheep:not(.hidden)) {
-    display: block;
+	display: block;
 }
+
 
 section:last-child {
     padding: 2rem;
-    display: grid;
-    gap: 1rem;
-    align-items: baseline;
-    grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(9em, 1fr));
+	align-items: stretch;
+	width: 100%;
+}
+
+@container section (max-width: 30rem) {
+    #CompareSheep > div:not(:last-child) {
+		border-right: none;
+		border-bottom: 1px solid black;
+	}
 }

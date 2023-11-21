@@ -47,3 +47,9 @@ input {
 	font-size: .8em;
 	border: 1px solid rgb(236, 169, 150);
 }
+
+.notSeen {
+	opacity: 0;
+	user-select: none;
+	pointer-events: none;
+}

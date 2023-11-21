@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from 'react';
+import '../style/ExtractFromDatabase.css'
 
 interface Props {
 	handleDataChange: (data: string[]) => void;
@@ -85,13 +86,13 @@ const ExtractFromDatabase = ({ handleDataChange, seen }: Props) => {
 		setData(idArray);
 	}
 	return (
-		<section className={hidden ? '' : 'hidden'}>
+		<section id='ExtractFromDatabase' className={hidden ? '' : 'hidden'}>
 			<h3>Добавтье .CSV фаил с базы данных</h3>
 			<label className='custom-file-upload'>
 				<input type='file' accept='.csv' onChange={handleFileChange} />
 				Добавть файл
 			</label>
-			<span className='error'>{error}</span>
+			<span className={error ? 'error' : ''}>{error}</span>
 			<ol>{dataOutput}</ol>
 		</section>
 	);

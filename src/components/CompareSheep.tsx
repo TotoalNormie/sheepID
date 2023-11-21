@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import '../style/CompareSheep.css';
+import { library } from '@fortawesome/fontawesome-svg-core';
 
 interface Props {
 	realSheepProp: string[];
@@ -32,19 +33,19 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 		let dnrSheep = [...databaseSheep];
 
 		realSheep.forEach((realID: string) => {
-            // console.log(realID);
+			// console.log(realID);
 			const dbID = databaseSheep.indexOf(realID);
-            // console.log(index, realID, dbID);
+			// console.log(index, realID, dbID);
 			// console.log(dbID);
 			if (dbID !== -1) {
-                radSheep.push(realID);
-                // console.log('rad', radSheep);
-                dnrSheep.splice(dbID, 1);
-                // console.log('dnr', dnrSheep);
-			}else {
+				radSheep.push(realID);
+				// console.log('rad', radSheep);
+				dnrSheep.splice(dbID, 1);
+				// console.log('dnr', dnrSheep);
+			} else {
 				rndSheep.push(realID);
-                // console.log('rnd', rndSheep);
-            }
+				// console.log('rnd', rndSheep);
+			}
 		});
 		setRealAndDatabaseSheep(radSheep);
 		setRealNotDatabaseSheep(rndSheep);
@@ -68,11 +69,6 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 		.filter(id => !handledSheep.includes(id))
 		.map((id: string, index: number) => (
 			<li key={index} className='real-and-database'>
-				<input
-					type='checkbox'
-					checked={handledSheep.includes(id)}
-					onChange={() => toggleHandled(id)}
-				/>
 				{id}
 			</li>
 		));
@@ -131,6 +127,10 @@ const CompareSheep = ({ realSheepProp, databaseSheepProp, seen }: Props) => {
 			<div>
 				<h3>Есть в базе данных, но не существуют</h3>
 				<ol>{outputDNR}</ol>
+			</div>
+			<div>
+				<h3>База данных</h3>
+				<ol>{databaseSheep.map((id: string, index: number) => <li key={index} >{id}</li>)}</ol>
 			</div>
 			<div>
 				<h3>Обработанные</h3>

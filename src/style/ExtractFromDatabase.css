@@ -1,0 +1,3 @@
+#ExtractFromDatabase ol {
+	grid-template-columns: repeat(auto-fit, minmax(6em, 1fr));
+}

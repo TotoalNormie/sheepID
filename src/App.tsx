@@ -43,19 +43,19 @@ function App() {
 	return (
 		<>
 			<header>
-				<button onClick={handlePrev}>
-					<FontAwesomeIcon icon={faAngleLeft} />
-					Прошлый Шаг
-				</button>
 				<h1>
 					SheepID
 					<img src={logo} alt='' />
 				</h1>
-				<button onClick={handleNext}>
-					Следуйщий Шаг
-					<FontAwesomeIcon icon={faAngleRight} />
-				</button>
 			</header>
+				<nav>
+					<button className={page === 1 ? 'notSeen' : ''} onClick={handlePrev} title='Прошлый Шаг'>
+						<FontAwesomeIcon icon={faAngleLeft} />
+					</button>
+					<button className={page === 3 ? 'notSeen' : ''} onClick={handleNext} title='Следуйщий Шаг'>
+						<FontAwesomeIcon icon={faAngleRight} />
+					</button>
+				</nav>
 			<main>
 				<AddSheep onDataChange={handleChange} seen={checkPage(1)} />
 				<ExtractFromDatabase handleDataChange={handleDatabaseChange} seen={checkPage(2)} />
