@@ -1,4 +1,4 @@
-#AddSheep form {
+.form {
     background-color: var(--bg);
     border-radius: 1rem;
     width: fit-content;
@@ -13,7 +13,7 @@
     }
 }
 
-li input {
+.input {
     width: 4ch;
     padding: 0;
     background: none;
@@ -26,6 +26,7 @@ li input {
 
 .editButton {
     transition: color 0.5s ease;
+    margin-left: auto;
     &:hover {
         color: rgb(74, 115, 74);
     }

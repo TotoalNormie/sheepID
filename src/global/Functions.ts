@@ -18,4 +18,10 @@ export function idToStringArray(array: string[]): string[] {
     return newArray;
 }
 
-export default {idToString, idToStringArray}
+export function formatDate(date: Date): string {
+    const day = date.getDate();
+    const month = date.getMonth();
+    const yeaar = date.getFullYear();
+
+    return `${day}.${month}.${yeaar}`;
+}

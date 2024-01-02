@@ -1,5 +1,11 @@
 #CompareSheep {
     container: section / inline-size;
+	padding: 2rem;
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(9em, 1fr));
+	align-items: stretch;
+	width: 100%;
 
 	& li {
 		&.real-and-database {
@@ -26,20 +32,6 @@
     & h3 {
         text-align: center;
     }
-}
-
-main:has(#CompareSheep:not(.hidden)) {
-	display: block;
-}
-
-
-section:last-child {
-    padding: 2rem;
-	display: grid;
-	gap: 1rem;
-	grid-template-columns: repeat(auto-fit, minmax(9em, 1fr));
-	align-items: stretch;
-	width: 100%;
 }
 
 @container section (max-width: 30rem) {
